@@ -18,8 +18,10 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Net;
 using System.Reflection;
+using System.IO;
 
 namespace Mir.GameServer
 {
@@ -75,9 +77,20 @@ namespace Mir.GameServer
                         .As<IDbConnection>().SingleInstance();
                     break;
                 case ProviderType.MySQL:
-                    connectionString = $"database={0};server={host};port={port};user id={user};Password={pass}";
+                    connectionString = $"database={db};server={host};port={port};user id={user};Password={pass}";
                     builder.RegisterType<MySqlCompiler>().As<Compiler>().SingleInstance();
                     builder.Register((c) => new MySqlConnection(connectionString))
+                        .As<IDbConnection>().SingleInstance();
+                    break;
+                case ProviderType.Sqlite3:
+                    var dbFilePath = "./MirDb.sqlite";
+                    if (!File.Exists(dbFilePath))
+                    {
+                        SQLiteConnection.CreateFile(dbFilePath);
+                    }
+                    connectionString = $"Data Source={dbFilePath};version=3";
+                    builder.RegisterType<MySqlCompiler>().As<Compiler>().SingleInstance();
+                    builder.Register((c) => new SQLiteConnection(connectionString))
                         .As<IDbConnection>().SingleInstance();
                     break;
                 default:

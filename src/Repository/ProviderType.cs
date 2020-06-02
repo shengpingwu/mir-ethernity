@@ -8,6 +8,7 @@ namespace Repository
     {
         PostgreSQL = 1,
         MySQL = 2,
-        SqlServer = 3
+        SqlServer = 3, 
+        Sqlite3 = 4
     }
 }

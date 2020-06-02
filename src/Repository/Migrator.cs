@@ -45,6 +45,9 @@ namespace Repository
                         case ProviderType.SqlServer:
                             rb.AddSqlServer();
                             break;
+                        case ProviderType.Sqlite3:
+                            rb.AddSQLite();
+                            break;
                     }
 
                     rb.WithGlobalConnectionString(connectionString)
